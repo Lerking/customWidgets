@@ -12,7 +12,7 @@ type floatEntry struct {
 	widget.Entry
 }
 
-func newFloatEntry() *floatEntry {
+func NewFloatEntry() *floatEntry {
 	entry := &floatEntry{}
 	entry.ExtendBaseWidget(entry)
 	return entry

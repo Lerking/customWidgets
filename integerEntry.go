@@ -12,7 +12,7 @@ type integerEntry struct {
 	widget.Entry
 }
 
-func newIntegerEntry() *integerEntry {
+func NewIntegerEntry() *integerEntry {
 	entry := &integerEntry{}
 	entry.ExtendBaseWidget(entry)
 	return entry
