@@ -8,23 +8,23 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-type integerEntry struct {
+type IntegerEntry struct {
 	widget.Entry
 }
 
-func NewIntegerEntry() *integerEntry {
-	entry := &integerEntry{}
+func NewIntegerEntry() *IntegerEntry {
+	entry := &IntegerEntry{}
 	entry.ExtendBaseWidget(entry)
 	return entry
 }
 
-func (e *integerEntry) TypedRune(r rune) {
+func (e *IntegerEntry) TypedRune(r rune) {
 	if r >= '0' && r <= '9' {
 		e.Entry.TypedRune(r)
 	}
 }
 
-func (e *integerEntry) TypedShortcut(shortcut fyne.Shortcut) {
+func (e *IntegerEntry) TypedShortcut(shortcut fyne.Shortcut) {
 	paste, ok := shortcut.(*fyne.ShortcutPaste)
 	if !ok {
 		e.Entry.TypedShortcut(shortcut)
@@ -37,6 +37,6 @@ func (e *integerEntry) TypedShortcut(shortcut fyne.Shortcut) {
 	}
 }
 
-func (e *integerEntry) Keyboard() mobile.KeyboardType {
+func (e *IntegerEntry) Keyboard() mobile.KeyboardType {
 	return mobile.NumberKeyboard
 }
