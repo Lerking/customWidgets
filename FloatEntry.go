@@ -40,3 +40,12 @@ func (e *FloatEntry) TypedShortcut(shortcut fyne.Shortcut) {
 func (e *FloatEntry) Keyboard() mobile.KeyboardType {
 	return mobile.NumberKeyboard
 }
+
+func (e *FloatEntry) Value() float64 {
+	val, _ := strconv.ParseFloat(e.Entry.Text, 64)
+	return val
+}
+
+func (e *FloatEntry) SetValue(val float64) {
+	e.Entry.SetText(strconv.FormatFloat(val, 'f', 2, 64))
+}

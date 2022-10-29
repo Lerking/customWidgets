@@ -40,3 +40,12 @@ func (e *IntegerEntry) TypedShortcut(shortcut fyne.Shortcut) {
 func (e *IntegerEntry) Keyboard() mobile.KeyboardType {
 	return mobile.NumberKeyboard
 }
+
+func (e *IntegerEntry) Value() int {
+	val, _ := strconv.Atoi(e.Entry.Text)
+	return val
+}
+
+func (e *IntegerEntry) SetValue(val int) {
+	e.Entry.SetText(strconv.Itoa(val))
+}
