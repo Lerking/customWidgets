@@ -1,104 +1,59 @@
 package customWidgets
 
 import (
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 )
 
+const defaultPlaceHolder string = "(Select one or more items)"
+
 type MultipleSelect struct {
 	widget.Select
-	Selected []string
-	Options  []*widget.Check
 }
 
-func NewMultipleSelect() *MultipleSelect {
-	selct := &MultipleSelect{}
-	selct.ExtendBaseWidget(selct)
-	return selct
+func NewMultipleSelect(options []string, changed func(string)) *MultipleSelect {
+	s := &MultipleSelect{}
+	s.OnChanged = changed
+	s.Options = options
+	s.PlaceHolder = defaultPlaceHolder
+	s.ExtendBaseWidget(s)
+	return s
 }
 
-func (s *MultipleSelect) SetOptions(opts []string) []*widget.Check {
-	var ch *widget.Check
-	for _, opt := range opts {
-		ch = widget.NewCheck(opt, func(b bool) {
-			s.SetSelected(opt)
-		})
-		s.Options = append(s.Options, ch)
+func (s *MultipleSelect) updateSelected(text string) {
+	s.Selected = text
+
+	if s.OnChanged != nil {
+		s.OnChanged(s.Selected)
 	}
-	return s.Options
+
+	s.Refresh()
 }
 
-func (s *MultipleSelect) SetSelected(opt string) {
-	for i, v := range s.Selected {
-		if v == opt {
-			s.Selected = append(s.Selected[:i], s.Selected[i+1:]...)
-			return
+// SelectedIndex returns the index value of the currently selected item in Options list.
+// It will return -1 if there is no selection.
+func (s *MultipleSelect) SelectedIndex() int {
+	for i, option := range s.Options {
+		if s.Selected == option {
+			return i
 		}
 	}
-	s.Selected = append(s.Selected, opt)
+	return -1 // not selected/found
 }
 
-func (s *MultipleSelect) GetSelected() []string {
-	return s.Selected
-}
-
-func (s *MultipleSelect) GetOptions() []*widget.Check {
-	return s.Options
-}
-
-func (s *MultipleSelect) ClearSelected() {
-	s.Selected = nil
-}
-
-func (s *MultipleSelect) ClearOptions() {
-	s.Options = nil
-}
-
-func (s *MultipleSelect) ClearAll() {
-	s.ClearSelected()
-	s.ClearOptions()
-}
-
-func (s *MultipleSelect) Refresh() {
-	s.Select.Refresh()
-}
-
-func (s *MultipleSelect) Hide() {
-	s.Select.Hide()
-}
-
-func (s *MultipleSelect) Show() {
-	s.Select.Show()
-}
-
-func (s *MultipleSelect) Resize(size fyne.Size) {
-	s.Select.Resize(size)
-}
-
-func (s *MultipleSelect) Move(pos fyne.Position) {
-	s.Select.Move(pos)
-}
-
-func (s *MultipleSelect) MinSize() fyne.Size {
-	return s.Select.MinSize()
-}
-
-func (s *MultipleSelect) Tapped(_ *fyne.PointEvent) {
-	s.Select.Tapped(nil)
-}
-
-func (s *MultipleSelect) SetPlaceHolder() {
-	txt := ""
-	for i, opt := range s.Options {
-		if i == len(s.Options)-1 && opt.Checked {
-			txt += opt.Text
-			s.Select.PlaceHolder = txt
-			return
-		} else if i < len(s.Options)-1 && opt.Checked {
-			txt += opt.Text + ", "
-		} else if i == len(s.Options)-1 && !opt.Checked {
-			s.Select.PlaceHolder = txt
-			return
+// SetSelected sets the current option of the select widget
+func (s *MultipleSelect) SetSelected(text string) {
+	for _, option := range s.Options {
+		if text == option {
+			s.updateSelected(text)
 		}
 	}
+}
+
+// SetSelectedIndex will set the Selected option from the value in Options list at index position.
+func (s *MultipleSelect) SetSelectedIndex(index int) {
+	if index < 0 || index >= len(s.Options) {
+		return
+	}
+
+	s.updateSelected(s.Options[index])
 }
